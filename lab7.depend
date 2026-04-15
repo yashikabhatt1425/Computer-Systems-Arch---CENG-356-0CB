@@ -1,0 +1,59 @@
+# depslib dependency file v1.0
+1775055704 source:c:\users\owner\onedrive\desktop\lab7\lab7.c
+	"header.h"
+
+1775050909 c:\users\owner\onedrive\desktop\lab7\header.h
+	<string.h>
+	<assert.h>
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	<sys/param.h>
+	<stdbool.h>
+	<ctype.h>
+
+1775014745 source:c:\users\owner\onedrive\desktop\lab7\main.c
+	"header.h"
+
+1775055013 source:c:\users\owner\onedrive\desktop\lab7\memory.c
+	"header.h"
+
+1775012577 source:c:\users\owner\onedrive\desktop\lab7\parser.c
+	"header.h"
+	"parser.h"
+
+1775012973 c:\users\owner\onedrive\desktop\lab7\parser.h
+	<string.h>
+
+1776264685 source:c:\users\owner\downloads\lab7 (2)\lab7\lab7.c
+	"header.h"
+
+1776266494 c:\users\owner\downloads\lab7 (2)\lab7\header.h
+	<string.h>
+	<assert.h>
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	<sys/param.h>
+	<stdbool.h>
+	<ctype.h>
+
+1776266591 source:c:\users\owner\downloads\lab7 (2)\lab7\main.c
+	"header.h"
+
+1776264685 source:c:\users\owner\downloads\lab7 (2)\lab7\memory.c
+	"header.h"
+
+1776264685 source:c:\users\owner\downloads\lab7 (2)\lab7\parser.c
+	"header.h"
+	"parser.h"
+
+1776264685 c:\users\owner\downloads\lab7 (2)\lab7\parser.h
+	<string.h>
+
+1776265126 source:c:\users\owner\downloads\lab7 (2)\lab7\lab8_9.c
+	"header.h"
+	"lab8header.h"
+
+1776264691 c:\users\owner\downloads\lab7 (2)\lab7\lab8header.h
+
