@@ -37,7 +37,7 @@ int main (int argc, char *argv[]) {
           /* The following code is for code after lab 7.*/
           // IMPORTANT: When you initialize the memory, please fill in 0, not the random number
           // to all the memory locations.
-        mem = init_memory();  // start the memory to hold the code.
+      mem = init_memory(); // start the memory to hold the code.
         stopChar = getchar();
         // Step 3: Load the code into memory (lab 7)
         puts("----Lab 7 Code Starts to Parse the ASM Code----");

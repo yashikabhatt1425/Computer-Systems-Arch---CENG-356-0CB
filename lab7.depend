@@ -57,3 +57,29 @@
 
 1776264691 c:\users\owner\downloads\lab7 (2)\lab7\lab8header.h
 
+1776264685 source:c:\users\owner\onedrive\documents\lab7\lab7\lab7.c
+	"header.h"
+
+1776266494 c:\users\owner\onedrive\documents\lab7\lab7\header.h
+	<string.h>
+	<assert.h>
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	<sys/param.h>
+	<stdbool.h>
+	<ctype.h>
+
+1776898981 source:c:\users\owner\onedrive\documents\lab7\lab7\main.c
+	"header.h"
+
+1776899043 source:c:\users\owner\onedrive\documents\lab7\lab7\memory.c
+	"header.h"
+
+1776264685 source:c:\users\owner\onedrive\documents\lab7\lab7\parser.c
+	"header.h"
+	"parser.h"
+
+1776264685 c:\users\owner\onedrive\documents\lab7\lab7\parser.h
+	<string.h>
+

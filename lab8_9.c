@@ -13,27 +13,34 @@
 //   4. Execute the code stored in the memory and print the results.
 #include "header.h"
 #include "lab8header.h"
-extern char *regNameTab[N_REG];
-extern unsigned int PCRegister; // PC register, always pointing to the next instruction.
 
-void CPU(unsigned char *mem){
+extern char *regNameTab[N_REG];
+extern unsigned int PCRegister; // PC register
+
+void CPU(unsigned char *mem)
+{
     unsigned int machineCode = 0;
     unsigned char opcode = 0;
-    PCRegister = CODESECTION;  // at the beginning, PCRegister is the starting point,
-                       // it should be a global integer defined in header.h
-    do{
-      printf("\nPC:%x\n", PCRegister);
-      machineCode = CPU_fetchCode(mem, PCRegister);
-   if (machineCode == 0 || opcode == 0x0C)
-    break; // break the infinite loop.
-      PCRegister += 4;                                                     // update the program counter
-      opcode = CPU_Decode(machineCode);
-      printf("Decoded Opcode is: %02X. \n", opcode);
+ unsigned int temp;
+    PCRegister = CODESECTION;
 
-      // Lab 9: Finish the execution of the code.
-      // Only finish this part when the CPU_Decode is done.
-      // CPU_Execution(opcode, machineCode, mem);
-    }while (1);  // This is an infinite while loop
+     while (1)
+    {
+        printf("\nPC:%x\n", PCRegister);
+
+        machineCode = CPU_fetchCode(mem, PCRegister);
+
+        opcode = CPU_Decode(machineCode);
+
+        if (opcode == 0 && machineCode == 0)
+            break;
+
+        printf("Decoded Opcode is: %02X\n", opcode);
+
+        CPU_Execution(opcode, machineCode, mem);
+    }
+
+// This is an infinite while loop
                  // When you fetch a machineCode of 00000000, the loop breaks.
     printRegisterFiles();     // After the code execution, print all the register contents on screen.
     printDataMemoryDump(mem); // After the code execution, print the memory dump of the data section.
@@ -44,9 +51,14 @@ void CPU(unsigned char *mem){
 //         get the 32-bit machine code from the memory.
 unsigned int CPU_fetchCode(char *mem, int codeOffset){
     // Read 4 bytes as one 32-bit instruction
-    unsigned int machineCode = *(unsigned int *)(mem + codeOffset);
+    // safe 32-bit load
+    unsigned int machineCode;
+
+    memcpy(&machineCode, mem + codeOffset, sizeof(unsigned int));
+
     return machineCode;
 }
+
 
 // Lab 8 - Step 2. Finish the CPU_Decode function to
 //         decode the instruction and return the
@@ -71,8 +83,12 @@ unsigned char opcode;
     return opcode;
 }
 // Lab 9: Finish the function CPU_Execution to run all the instructions.
-void CPU_Execution(unsigned char opcode, unsigned int machineCode, char *mem){
-    unsigned char rt = 0;
+void CPU_Execution(unsigned char opcode, unsigned int machineCode, char *mem)
+{
+    unsigned char rs = 0, rt = 0, rd = 0;
+short imm = 0;
+  unsigned int temp = 0;
+unsigned int addr = 0;
     switch (opcode)  // execute different functions when opcode is set differently.
     {
 		// This is an example how lab will be executed. Please follow this example and finish exections of the code.
@@ -86,25 +102,82 @@ void CPU_Execution(unsigned char opcode, unsigned int machineCode, char *mem){
             regFile[rt] = machineCode & 0x0000FFFF;  // get the last 16 bit as address.
             // update PCregister ???? Pay special attention to branch instructions.
             PCRegister += 4;
-            if (DEBUG_CODE){   // print the hints to the user in DEBUG_MODE
-                printf("Code Executed: %08X\n", machineCode);
-                printf("****** PC Register is %08X ******\n", PCRegister);
-            }
+
             break;
-        case 0b100000://"lb" instruction.
-		    //....
-			break;
-
-        // continue to all the other cases used in the program.
-        // case ......:
 
 
-        // Should never go to default part when complete. Otherwise, that is a mistake.
+        // ---------------- LW ----------------
+        case 0b100011:
+            rs = (machineCode >> 21) & 0x1F;
+            rt = (machineCode >> 16) & 0x1F;
+            imm = (short)(machineCode & 0xFFFF);
+
+
+memcpy(&temp, mem + regFile[rs] + imm, sizeof(unsigned int));
+regFile[rt] = temp;
+            PCRegister += 4;
+            break;
+
+        // ---------------- SW ----------------
+       case 0b101011:
+    rs = (machineCode >> 21) & 0x1F;
+    rt = (machineCode >> 16) & 0x1F;
+    imm = (short)(machineCode & 0xFFFF);
+
+    memcpy(mem + regFile[rs] + imm, &regFile[rt], sizeof(unsigned int));
+
+    PCRegister += 4;
+    break;
+        // ---------------- J ----------------
+        case 0b000010:
+            addr = machineCode & 0x03FFFFFF;
+             PCRegister = addr * 4;
+            break;
+
+        // ---------------- BGE ----------------
+        case 0b000001:
+            rs = (machineCode >> 21) & 0x1F;
+            rt = (machineCode >> 16) & 0x1F;
+            imm = (short)(machineCode & 0xFFFF);
+
+            if (regFile[rs] >= regFile[rt])
+                PCRegister += 4 + (imm * 4);
+            else
+                PCRegister += 4;
+
+            break;
+
+        // ---------------- ADDI ----------------
+        case 0x08:
+            rs = (machineCode >> 21) & 0x1F;
+            rt = (machineCode >> 16) & 0x1F;
+            imm = (short)(machineCode & 0xFFFF);
+
+            regFile[rt] = regFile[rs] + imm;
+            PCRegister += 4;
+            break;
+
+        // ---------------- ADD (R-type) ----------------
+        case 0x20:
+            rs = (machineCode >> 21) & 0x1F;
+            rt = (machineCode >> 16) & 0x1F;
+            rd = (machineCode >> 11) & 0x1F;
+
+            regFile[rd] = regFile[rs] + regFile[rt];
+            PCRegister += 4;
+            break;
+
+        // ---------------- DEFAULT ----------------
         default:
-            printf("Wrong instruction! You need to fix this instruction %02X %08X\n", opcode,  machineCode);
+            printf("Wrong instruction! %02X %08X\n", opcode, machineCode);
             system("PAUSE");
-            exit(3);  // exit the program if running here.
-            break;
+            exit(3);
+    }
+
+    if (DEBUG_CODE)
+    {
+        printf("Code Executed: %08X\n", machineCode);
+        printf("****** PC Register is %08X ******\n", PCRegister);
     }
 }
 // Lab 8 - Step 3. Print all the 32 registers in regFile and names saved in
@@ -119,6 +192,8 @@ void printRegisterFiles(){
 }
  // Lab 8 - Step 4. Call function memory_dump and pass the proper parameters to dump the first 256
 //          bytes from Data section.
-void printDataMemoryDump(){
-
-}
+void printDataMemoryDump(char *mem)
+{printf("\n=========== Data Memory Dump ============\n");
+    memory_dump(mem, DATASECTION, 256);
+    printf("=========================================\n");
+    }

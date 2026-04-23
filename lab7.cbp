@@ -36,6 +36,9 @@
 		<Unit filename="lab7.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="lab8_9.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
